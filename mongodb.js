@@ -8,61 +8,58 @@ console.log(id)
 const connectionURL = 'mongodb://127.0.0.1'
 const dbName = 'task-manager'
 
-// MongoClient.connect(connectionURL,{useNewUrlParser:true},(error,client)=>{
+// MongoClient.connect(connectionURL,{useNewUrlParser:true},(error,connect)=>{
 //     if(error){
-//         return console.log("connection couldn't established")
+//         return console.log("could not establish the connection")
 //     }
-//     console.log("connection established")
-//     const db = client.db(dbName)
 
-//     db.collection('users').insertMany(
-//         [{
-//             name : "Janitha",
-//             age:"26"
-//         },
-//         {
-//             name : "Ajitha",
-//             age:"26"
-//         }],
+//     console.log("connection established")
+//     const db = connect.db(dbName)
+
+//     db.collection("newTasks").insertMany(
+//         [
+//             {   _id : 3,
+//                 description : "add a new app",
+//                 completed: true
+//             },
+//             {
+//                 description:"create mongo app",
+//                 completed: false
+//             },
+//             {
+//                 description:"iron the clothes",
+//                 completed: false
+//             }
+//         ],
 //         (error,result)=>{
 //             if(error){
-//                 return console.log("could not save the document")
+//                 return console.log(error)
 //             }
+
+//             console.log("documents inserted")
 //             console.log(result.ops)
 //         }
 //     )
 // })
 
-MongoClient.connect(connectionURL,{useNewUrlParser:true},(error,connect)=>{
+//retrieve tasks
+
+MongoClient.connect(connectionURL,{useNewUrlParser:true},(error, connect)=>{
     if(error){
-        return console.log("could not establish the connection")
+        return console.log("connection could not established")
     }
 
-    console.log("connection established")
+    console.log("coonection established")
     const db = connect.db(dbName)
 
-    db.collection("newTasks").insertMany(
-        [
-            {   _id : 3,
-                description : "add a new app",
-                completed: true
-            },
-            {
-                description:"create mongo app",
-                completed: false
-            },
-            {
-                description:"iron the clothes",
-                completed: false
-            }
-        ],
-        (error,result)=>{
-            if(error){
-                return console.log(error)
-            }
-
-            console.log("documents inserted")
-            console.log(result.ops)
+    db.collection('newTasks').find({completed:"x"}).toArray((error,tasks)=>{
+        if(error){
+            return console.log("can not retireve the documents")
         }
-    )
+    
+        if(tasks.length==0){
+            return console.log("returned object is empty")
+        }
+        return console.log(tasks)
+    })
 })
