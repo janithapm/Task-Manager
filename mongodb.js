@@ -1,7 +1,7 @@
 // const mongodb = require('mongodb')
 // const MongoClient = mongodb.MongoClient
 
-const {MongoClient,ObjectID} = require("mongodb")
+const { MongoClient, ObjectID } = require("mongodb")
 const id = new ObjectID()
 console.log(id)
 
@@ -44,22 +44,25 @@ const dbName = 'task-manager'
 
 //retrieve tasks
 
-MongoClient.connect(connectionURL,{useNewUrlParser:true},(error, connect)=>{
-    if(error){
+MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, connect) => {
+    if (error) {
         return console.log("connection could not established")
     }
 
     console.log("coonection established")
     const db = connect.db(dbName)
 
-    db.collection('newTasks').find({completed:"x"}).toArray((error,tasks)=>{
-        if(error){
-            return console.log("can not retireve the documents")
-        }
-    
-        if(tasks.length==0){
-            return console.log("returned object is empty")
-        }
-        return console.log(tasks)
+    db.collection("newTasks").deleteOne({
+        completed :true}
+    ).then((data)=>{
+        console.log(data)
+    }).catch((err)=>{
+        console.log(err)
     })
 })
+
+
+
+
+
+
