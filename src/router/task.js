@@ -49,8 +49,12 @@ router.patch('/tasks/:id', async (req, res) => {
         return res.status(400).send({ message: "not allowed" })
     }
         try {
-            const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: this.true,useFindAndModify:false })
+            //const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: this.true,useFindAndModify:false })
     
+            const updatedTask = await Task.findById(req.params.id)
+            allowedUpdates.forEach(update => updatedTask[update] = req.body[update]);
+            updatedTask.save()
+
             if (!updatedTask)
                 return res.status(404).send({ "messsage": "no task for id" + req.params.id })
             return res.send(updatedTask)

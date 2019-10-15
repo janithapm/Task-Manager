@@ -17,6 +17,16 @@ router.post('/users', (req, res) => {
 
 })
 
+router.post('/users/login', async(req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    }
+    catch (e) {
+        res.status(400).send(e)
+    }
+})
+
 router.get('/users', (req, res) => {
     User.find({}).then((users) => {
         res.send(users)
@@ -37,38 +47,47 @@ router.get('/users/:id', (req, res) => {
     })
 })
 
-router.patch('/users/:id',async(req,res)=>{
+router.patch('/users/:id', async (req, res) => {
 
-    allowedUpdates = ['name','age']
+    allowedUpdates = ['name', 'age', 'email']
     updates = Object.keys(req.body)
     isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
-    if(!isValidOperation){
-        return res.status(400).send({message:"bad request"})
+    if (!isValidOperation) {
+        return res.status(400).send({ message: "bad request" })
     }
 
-    try{
-        const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true,useFindAndModify:false})
+    try {
 
-        if(!updatedUser){
-            return res.status(404).send({error:"no user for the id"})
+        //const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true,useFindAndModify:false})
+
+        //this user is not still updated
+        const updatedUser = await User.findById(req.params.id)
+        updates.forEach(update => updatedUser[update] = req.body[update]);
+
+        await updatedUser.save()
+
+        if (!updatedUser) {
+            return res.status(404).send({ error: "no user for the id" })
         }
+
         return res.send(updatedUser)
     }
-    catch(e){
+    catch (e) {
+
         res.status(400).send(e)
     }
 })
 
-router.delete('/users/:id',async(req,res)=>{
-    try{
+router.delete('/users/:id', async (req, res) => {
+    try {
         const deletedUser = await User.findByIdAndDelete(req.params.id)
-        if(!deletedUser){
-            return res.status(404).send({"error":"no user"})
+        if (!deletedUser) {
+            return res.status(404).send({ "error": "no user" })
         }
         res.send(deletedUser)
     }
-    catch(e){
+    catch (e) {
         res.status(500).send(e)
     }
 })

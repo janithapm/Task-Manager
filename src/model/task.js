@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 
-const Task = mongoose.model('tasks', {
+var taskSchema = mongoose.Schema({
     description: {
         type: String
     },
@@ -8,5 +8,13 @@ const Task = mongoose.model('tasks', {
         type: Boolean
     }
 })
+
+taskSchema.pre('save',function (next){
+    const task = this;
+    console.log("task saved")
+    next()
+})
+
+const Task = mongoose.model('tasks', taskSchema)
 
 module.exports = Task
