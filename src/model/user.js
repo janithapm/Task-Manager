@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 var validator = require('validator')
 
-const User = mongoose.model('User', {
+const userSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -34,5 +34,15 @@ const User = mongoose.model('User', {
         required: true
     }
 })
+
+userSchema.pre('save',async function(next){
+    // cannot use an arrow function , since
+    //this keyword is not accessible by an arrow function
+    const user = this
+    console.log("before saving user")
+    next()
+})
+
+const User = mongoose.model('User', userSchema)
 
 module.exports = User
