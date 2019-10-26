@@ -4,6 +4,7 @@ require('./db/mongoose')
 //models
 const Task = require("./model/task")
 
+
 //routes
 const userRouter = require('./router/user')
 const taskRouter = require('./router/task')
@@ -12,6 +13,12 @@ const app = express()
 const port = 8080
 
 app.use(express.json())
+
+//middleware when the site is in the maintenance
+// app.use((req,res,next)=>{
+//     res.status(503).send({message:"web site is shut down for the maintenance"})
+// })
+
 app.use(userRouter)
 app.use(taskRouter)
 
