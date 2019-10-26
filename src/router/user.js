@@ -9,14 +9,15 @@ const authentication = require('../middleware/auth')
 
 router.use(express.json())
 
-router.post('/users', (req, res) => {
+router.post('/users', async(req, res) => {
+    try{
     const user = new User(req.body)
-    user.save().then(() => {
-        res.send(user)
-    }).catch((e) => {
-        res.status(400)
-        res.send(e)
-    })
+    const token = await user.generateAuthToken()
+    res.status(201).send({user,token})
+    }
+    catch(e){
+        res.status(401).send(e)
+    }
 
 })
 
