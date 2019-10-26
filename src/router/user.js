@@ -4,6 +4,9 @@ const router = express.Router()
 //user model
 const User = require("../model/user")
 
+//authentication middleware
+const authentication = require('../middleware/auth')
+
 router.use(express.json())
 
 router.post('/users', (req, res) => {
@@ -28,13 +31,8 @@ router.post('/users/login', async(req, res) => {
     }
 })
 
-router.get('/users', (req, res) => {
-    User.find({}).then((users) => {
-        res.send(users)
-    }).catch((e) => {
-        res.status(500)
-        res.send(e)
-    })
+router.get('/users/me', authentication, (req, res) => {
+    res.send(req.user)
 })
 
 router.get('/users/:id', (req, res) => {
