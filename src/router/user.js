@@ -32,8 +32,30 @@ router.post('/users/login', async(req, res) => {
     }
 })
 
+router.post('/users/logout',authentication,async(req,res)=>{
+    try{
+        
+        req.user.tokens = req.user.tokens.filter(token=>{
+            return token.token !== req.token
+        })
+        await req.user.save()
+
+        res.send({message:"logged out"})
+    }
+    catch(e){
+        res.status(500).send()
+
+    }
+})
+
 router.get('/users/me', authentication, (req, res) => {
-    res.send(req.user)
+    try{
+        res.send(req.user)
+    }
+    catch(e){
+        res.status(400).send()
+    }
+    
 })
 
 router.get('/users/:id', (req, res) => {
