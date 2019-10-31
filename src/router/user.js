@@ -9,53 +9,64 @@ const authentication = require('../middleware/auth')
 
 router.use(express.json())
 
-router.post('/users', async(req, res) => {
-    try{
-    const user = new User(req.body)
-    const token = await user.generateAuthToken()
-    res.status(201).send({user,token})
+router.post('/users', async (req, res) => {
+    try {
+        const user = new User(req.body)
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
     }
-    catch(e){
+    catch (e) {
         res.status(401).send(e)
     }
 
 })
 
-router.post('/users/login', async(req, res) => {
+router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
-        res.send({token})
+        res.send({ token })
     }
     catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.post('/users/logout',authentication,async(req,res)=>{
-    try{
-        
-        req.user.tokens = req.user.tokens.filter(token=>{
+router.post('/users/logout', authentication, async (req, res) => {
+    try {
+
+        req.user.tokens = req.user.tokens.filter(token => {
             return token.token !== req.token
         })
         await req.user.save()
 
-        res.send({message:"logged out"})
+        res.send({ message: "logged out" })
     }
-    catch(e){
+    catch (e) {
         res.status(500).send()
 
     }
 })
 
+router.post('/users/logoutall', authentication, async(req, res) => {
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send({message:"logged out from all sessions"})
+    }
+    catch (e) {
+
+    }
+})
+
 router.get('/users/me', authentication, (req, res) => {
-    try{
+    try {
         res.send(req.user)
     }
-    catch(e){
+    catch (e) {
         res.status(400).send()
     }
-    
+
 })
 
 router.get('/users/:id', (req, res) => {
