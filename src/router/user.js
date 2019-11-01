@@ -81,7 +81,7 @@ router.get('/users/:id', (req, res) => {
     })
 })
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/me', authentication, async (req, res) => {
 
     allowedUpdates = ['name', 'age', 'email']
     updates = Object.keys(req.body)
@@ -96,7 +96,7 @@ router.patch('/users/:id', async (req, res) => {
         //const updatedUser = await User.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true,useFindAndModify:false})
 
         //this user is not still updated
-        const updatedUser = await User.findById(req.params.id)
+        const updatedUser = await User.findById(req.user._id)
         updates.forEach(update => updatedUser[update] = req.body[update]);
 
         await updatedUser.save()
@@ -113,13 +113,16 @@ router.patch('/users/:id', async (req, res) => {
     }
 })
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', authentication, async (req, res) => {
     try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id)
-        if (!deletedUser) {
-            return res.status(404).send({ "error": "no user" })
-        }
-        res.send(deletedUser)
+        // const deletedUser = await User.findByIdAndDelete(req.params.id)
+        // if (!deletedUser) {
+        //     return res.status(404).send({ "error": "no user" })
+        // }
+        // res.send(deletedUser)
+
+        await req.user.remove()
+        res.send(req.user)
     }
     catch (e) {
         res.status(500).send(e)
