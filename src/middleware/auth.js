@@ -11,15 +11,14 @@ const authenticate = async(req,res,next)=>{
             throw new Error()
         }
 
-        const user =await User.findOne({'_id':decoded._id,'tokens.token':token})
+        const user = await User.findOne({'_id':decoded._id,'tokens.token':token})
 
         if(!user){
             throw new Error()
         }
-        
+
         req.user = user
         req.token = token
-        console.log(token)
         next()
     }
     catch(e){
