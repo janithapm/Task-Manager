@@ -6,15 +6,18 @@ var taskSchema = mongoose.Schema({
     },
     completed: {
         type: Boolean
+    },
+    owner:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true
     }
 })
 
 taskSchema.pre('save',function (next){
     const task = this;
-    console.log("task saved")
     next()
 })
 
-const Task = mongoose.model('tasks', taskSchema)
+const Task = mongoose.model('Task', taskSchema)
 
 module.exports = Task
