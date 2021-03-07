@@ -5,7 +5,7 @@ const authenticate = async(req,res,next)=>{
     try{
         const token = req.header('Authorization').replace('Bearer ','')
 
-        const decoded = jwt.verify(token,'varsity')
+        const decoded = jwt.verify(token,process.env.JWT_SECRET)
         
         if(!decoded){
             throw new Error()
