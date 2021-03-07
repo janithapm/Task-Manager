@@ -18,11 +18,13 @@ test("Should convert 32 F to 0 C", () => {
 test("Should convert 0 C to 32 F", () => {
     const farenheit = celsiusToFahrenheit(0)
     expect(farenheit).toBe(32)
-})// test("async test", () => {
+})
+// test("async test", () => {
 //     setTimeout(() => {
 //         expect(1).toBe(2)
 //     }, 2000)
-// })// test("async test", (done) => {
+// })
+// test("async test", (done) => {
 //     setTimeout(() => {
 //         expect(1).toBe(2)
 //         done() // this will make the function asynchronous
