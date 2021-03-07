@@ -4,9 +4,12 @@
   "description": "Task manager App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "env-cmd ./config/test.env jest --watchAll",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
+  },
+  "jest":{
+    "testEnvironment":"node"
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
+    "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.2.7",
     "mongoose": ">=5.7.5",
